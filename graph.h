@@ -27,18 +27,19 @@
 #include <set>
 #include <algorithm>
 
-#define WEIGHTED   0
+#define WEIGHTED 0
 #define UNWEIGHTED 1
 
 using namespace std;
 
-class Graph {
- public:
-  vector<vector<pair<int,float> > > links;
+class Graph
+{
+public:
+  vector<vector<pair<int, float>>> links;
   vector<int> nodes;
-  
-  Graph (char *filename, int type);
-  
+
+  Graph(char *filename, int type);
+
   void clean(int type);
   void renumber(int type);
   void display(int type);

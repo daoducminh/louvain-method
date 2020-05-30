@@ -29,22 +29,23 @@
 
 using namespace std;
 
-class Community {
- public:
+class Community
+{
+public:
   vector<double> neigh_weight;
   vector<unsigned int> neigh_pos;
   unsigned int neigh_last;
 
-  Graph g; // network to compute communities for
-  int size; // nummber of nodes in the network and size of all vectors
-  vector<int> n2c; // community to which each node belongs
-  vector<double> in,tot; // used to compute the modularity participation of each community
+  Graph g;                // network to compute communities for
+  int size;               // nummber of nodes in the network and size of all vectors
+  vector<int> n2c;        // community to which each node belongs
+  vector<double> in, tot; // used to compute the modularity participation of each community
 
   // number of pass for one level computation
   // if -1, compute as many pass as needed to increase modularity
   int nb_pass;
 
-  // a new pass is computed if the last one has generated an increase 
+  // a new pass is computed if the last one has generated an increase
   // greater than min_modularity
   // if 0. even a minor increase is enough to go for one more pass
   double min_modularity;
@@ -52,9 +53,9 @@ class Community {
   // constructors:
   // reads graph from file using graph constructor
   // type defined the weighted/unweighted status of the graph file
-  Community (char *filename, char *filename_w, int type, int nb_pass, double min_modularity);
+  Community(char *filename, char *filename_w, int type, int nb_pass, double min_modularity);
   // copy graph
-  Community (Graph g, int nb_pass, double min_modularity);
+  Community(Graph g, int nb_pass, double min_modularity);
 
   // initiliazes the partition with something else than all nodes alone
   void init_partition(char *filename_part);
@@ -100,34 +101,36 @@ class Community {
 };
 
 inline void
-Community::remove(int node, int comm, double dnodecomm) {
-  assert(node>=0 && node<size);
+Community::remove(int node, int comm, double dnodecomm)
+{
+  assert(node >= 0 && node < size);
 
   tot[comm] -= g.weighted_degree(node);
-  in[comm]  -= 2*dnodecomm + g.nb_selfloops(node);
-  n2c[node]  = -1;
+  in[comm] -= 2 * dnodecomm + g.nb_selfloops(node);
+  n2c[node] = -1;
 }
 
 inline void
-Community::insert(int node, int comm, double dnodecomm) {
-  assert(node>=0 && node<size);
+Community::insert(int node, int comm, double dnodecomm)
+{
+  assert(node >= 0 && node < size);
 
   tot[comm] += g.weighted_degree(node);
-  in[comm]  += 2*dnodecomm + g.nb_selfloops(node);
-  n2c[node]=comm;
+  in[comm] += 2 * dnodecomm + g.nb_selfloops(node);
+  n2c[node] = comm;
 }
 
 inline double
-Community::modularity_gain(int node, int comm, double dnodecomm, double w_degree) {
-  assert(node>=0 && node<size);
+Community::modularity_gain(int node, int comm, double dnodecomm, double w_degree)
+{
+  assert(node >= 0 && node < size);
 
   double totc = (double)tot[comm];
   double degc = (double)w_degree;
-  double m2   = (double)g.total_weight;
-  double dnc  = (double)dnodecomm;
-  
-  return (dnc - totc*degc/m2);
-}
+  double m2 = (double)g.total_weight;
+  double dnc = (double)dnodecomm;
 
+  return (dnc - totc * degc / m2);
+}
 
 #endif // COMMUNITY_H
